@@ -18,6 +18,7 @@ interface FoocationIdentity{
     val displayName: String
     val password: String
     val role: Role
+    val avatar: Binary
 }
 
 @Document
@@ -26,8 +27,10 @@ data class User(
     @Indexed(unique = true) override val username: String = "",
     @Indexed(unique = true) override val email: String = "",
     override val displayName: String = "",
-    override val password: String = "",
+    override var password: String = "",
     override val role: Role = Role.USER,
+    override val avatar: Binary = Binary(byteArrayOf())
+
 ): FoocationIdentity {
     companion object {
         val currentUser: User = User()
@@ -40,9 +43,22 @@ data class User(
                 email = userReq.email,
                 displayName = userReq.displayName,
                 password = userReq.password,
-                role = Role.USER
+                role = Role.USER,
+                Binary(BsonBinarySubType.BINARY, userReq.avatar.bytes),
             )
         }
+    }
+
+    fun updatePassword(newPassword: String): User{
+        return User(
+            id,
+            username,
+            email,
+            displayName,
+            newPassword,
+            role,
+            avatar
+        )
     }
 
     fun update(userReq: UserReq): User {
@@ -52,7 +68,8 @@ data class User(
             userReq.email,
             userReq.displayName,
             userReq.password,
-            this.role
+            this.role,
+            Binary(BsonBinarySubType.BINARY, userReq.avatar.bytes),
         )
     }
 }
@@ -64,7 +81,8 @@ data class Staff(
     override val displayName: String,
     override val password: String,
     override val role: Role = Role.MANAGER,
-    val phoneNumber: String
+    val phoneNumber: String,
+    override val avatar: Binary
 ): FoocationIdentity
 
 data class Artifact(

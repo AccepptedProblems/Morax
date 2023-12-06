@@ -26,7 +26,7 @@ class UserServiceImpl(
     val jwtProvider: JwtProvider,
     val passwordEncoder: PasswordEncoder,
     val validator: Validator
-): UserService {
+) : UserService {
     override fun createUser(@RequestBody userReq: UserReq): Mono<UserResp> {
         userReq.password = passwordEncoder.encode(userReq.password)
         val user = userRepo.addUser(userReq)
@@ -46,7 +46,7 @@ class UserServiceImpl(
             val refreshToken = jwtProvider.generateRefreshToken(user)
             saveToken(user, jwtToken)
             return Mono.just(LoginResp(UserResp(user), jwtToken, refreshToken))
-        }catch (e: BadCredentialsException) {
+        } catch (e: BadCredentialsException) {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "Wrong username or password")
         }
     }
@@ -65,7 +65,7 @@ class UserServiceImpl(
 
     override fun getUserById(id: String): Mono<UserResp> {
         val user = userRepo.findUserById(id)
-        val userPoints: Int = pointRepo.pointsByUserId(user.id).sumOf {it.point}
+        val userPoints: Int = pointRepo.pointsByUserId(user.id).sumOf { it.point }
         val balance = 0 //TODO: Add balance
         val userResp = UserResp(user, rankingPoint = userPoints, balance = balance)
         return Mono.just(userResp)
@@ -77,9 +77,10 @@ class UserServiceImpl(
 
     override fun changePassword(userId: String, changePasswordReq: ChangePasswordReq): UserResp {
         val user = userRepo.findUserById(userId)
-        validator.validChangePassword(changePasswordReq, user)
-        val userReq = UserReq(user.username, user.displayName, user.email, changePasswordReq.newPassword, changePasswordReq.rePassword)
-        return updateUser(userReq, userId)
+        validator.validChangePassword(changePasswordReq, user.password)
+        val newPassword = passwordEncoder.encode(changePasswordReq.newPassword)
+        val updatedUser = user.updatePassword(newPassword)
+        return UserResp(userRepo.updateUser(updatedUser))
     }
 
     fun saveToken(user: User, jwtToken: String) {

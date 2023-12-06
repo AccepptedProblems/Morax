@@ -10,7 +10,8 @@ data class UserResp(
     val displayName: String = "",
     val email: String = "",
     val rankingPoint: Int,
-    val balance: Int
+    val balance: Int,
+    val avatar: Binary
 ){
     constructor(user: User, rankingPoint: Int = 0, balance: Int = 0) : this(
         id = user.id,
@@ -18,7 +19,8 @@ data class UserResp(
         email = user.email,
         displayName = user.displayName,
         rankingPoint = rankingPoint,
-        balance = balance
+        balance = balance,
+        avatar = user.avatar
     )
 }
 
@@ -28,7 +30,8 @@ data class UserReq(
     val displayName: String,
     val email: String,
     var password: String,
-    var rePassword: String
+    var rePassword: String,
+    val avatar: MultipartFile
 )
 
 data class LoginReq(

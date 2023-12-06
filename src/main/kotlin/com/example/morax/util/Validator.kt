@@ -9,12 +9,12 @@ import org.springframework.web.server.ResponseStatusException
 
 @Component
 class Validator(val passwordEncoder: PasswordEncoder) {
-    fun validChangePassword(changePasswordReq: ChangePasswordReq, user: User){
+    fun validChangePassword(changePasswordReq: ChangePasswordReq, userPassword: String){
         if(changePasswordReq.newPassword != changePasswordReq.rePassword) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Confirm password do not match with new password, please try again")
         }
 
-        if(!passwordEncoder.matches(changePasswordReq.oldPassword, user.password)) {
+        if(!passwordEncoder.matches(changePasswordReq.oldPassword, userPassword)) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Password is incorrect")
         }
     }

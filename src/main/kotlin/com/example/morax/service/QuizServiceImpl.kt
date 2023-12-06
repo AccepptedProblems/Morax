@@ -67,6 +67,7 @@ class QuizServiceImpl(
         val userId = User.currentUser.id
         val quiz = getQuizById(quizId)
         val answer = quizRepo.answerById(answerId)
+
         return if(quiz.correctAnswer == answer.answer) {
             val point = Point(userId, quiz.point)
             pointRepo.addPoint(point)
