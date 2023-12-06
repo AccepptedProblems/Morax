@@ -187,7 +187,7 @@ data class AnswerQuizResp(
         id = MoraxUtils.newUUID(),
         quiz = quiz,
         isCorrect = isCorrect,
-        point = quiz.point
+        point = if (isCorrect) quiz.point else 0
     )
 }
 

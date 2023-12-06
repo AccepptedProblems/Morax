@@ -58,6 +58,10 @@ class QuizController(private val quizService: QuizServiceImpl) {
         return quizService.updateAnswer(answerReq, quizId)
     }
 
+    @Operation(
+        summary = "Answers quiz",
+        description = "Answer the quiz and get the result",
+    )
     @PostMapping("/{quizId}/answer/{answerId}")
     fun answerQuiz(@PathVariable quizId: String, @PathVariable answerId: String): Mono<AnswerQuizResp> {
         return Mono.just(quizService.answerQuiz(quizId, answerId))
