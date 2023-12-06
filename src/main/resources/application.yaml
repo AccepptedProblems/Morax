@@ -6,7 +6,7 @@ server:
 data:
   mongodb:
     database: morax
-    uri: mongodb://root:password@0.0.0.0:27017/admin
+    uri: mongodb://root:password@35.198.240.131:27017/admin
     table:
       user: user
       token: token

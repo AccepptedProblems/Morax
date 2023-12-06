@@ -91,7 +91,7 @@ class LocationController(
         @RequestParam(required = false) searchText: String?,
         @PathVariable locationId: String
     ): Mono<List<ArtifactResp>> {
-        return artifactService.listArtifact(searchText)
+        return Mono.just(artifactService.artifactsByLocationId(locationId, searchText))
     }
 
 

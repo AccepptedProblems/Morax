@@ -8,5 +8,6 @@ interface ArtifactRepo {
     fun updateArtifact(artifactReq: ArtifactReq, artifactId: String, locationId: String): Artifact
     fun artifactById(id: String): Artifact
     fun listArtifact(): List<Artifact>
+    fun artifactsByLocationId(locationId: String, searchStr: String?): List<Artifact>
     fun listArtifact(searchStr: String?): List<Artifact>
 }

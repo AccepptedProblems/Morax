@@ -24,4 +24,8 @@ class ArtifactServiceImpl(val artifactRepo: ArtifactRepoImpl): ArtifactService {
         val artifacts = artifactRepo.listArtifact().map { artifact -> ArtifactResp(artifact) }
         return Mono.just(artifacts)
     }
+
+    override fun artifactsByLocationId(locationId: String, searchStr: String?): List<ArtifactResp> {
+        return artifactRepo.artifactsByLocationId(locationId, searchStr).map { artifact -> ArtifactResp(artifact) }
+    }
 }

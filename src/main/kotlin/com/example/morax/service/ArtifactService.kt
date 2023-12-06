@@ -9,4 +9,5 @@ interface ArtifactService {
     fun updateArtifact(artifactReq: ArtifactReq, artifactId: String, locationId: String): Mono<ArtifactResp>
     fun listArtifact(searchStr: String?): Mono<List<ArtifactResp>>
 
+    fun artifactsByLocationId(locationId: String, searchStr: String?): List<ArtifactResp>
 }

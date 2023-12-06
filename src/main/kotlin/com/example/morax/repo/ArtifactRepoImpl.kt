@@ -46,5 +46,9 @@ class ArtifactRepoImpl(
         if (searchStr != null) artifacts = artifacts.filter { artifact: Artifact -> artifact.name.contains(searchStr) }
         return artifacts
     }
-    
+
+    override fun artifactsByLocationId(locationId: String, searchStr: String?): List<Artifact> {
+        return listArtifact(searchStr).filter { artifact: Artifact -> artifact.locationId == locationId }
+    }
+
 }
