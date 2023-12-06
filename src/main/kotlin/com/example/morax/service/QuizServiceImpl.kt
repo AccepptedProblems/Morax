@@ -43,7 +43,7 @@ class QuizServiceImpl(
             val quizId = quiz.id
             val answers = getQuizAnswer(quizId)
             return@map QuizResp(quiz, answers)
-        }.take(10)
+        }
     }
 
     override fun addAnswer(answers: List<AnswerReq>): Mono<List<AnswerResp>> {
@@ -66,12 +66,12 @@ class QuizServiceImpl(
         val userId = User.currentUser.id
         val quiz = getQuizById(quizId)
         val answer = quizRepo.answerById(answerId)
-        if(quiz.correctAnswer == answer.answer) {
+        return if(quiz.correctAnswer == answer.answer) {
             val point = Point(userId, quiz.point)
             pointRepo.addPoint(point)
-            return AnswerQuizResp(quiz, true)
+            AnswerQuizResp(quiz, true)
         } else {
-            return AnswerQuizResp(quiz, false)
+            AnswerQuizResp(quiz, false)
         }
     }
 }
