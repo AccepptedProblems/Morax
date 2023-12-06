@@ -41,6 +41,15 @@ class QuizController(private val quizService: QuizServiceImpl) {
     }
 
     @Operation(
+        summary = "Get quiz by id",
+        description = "Get quiz by id",
+    )
+    @GetMapping("/{quizId}", MediaType.MULTIPART_FORM_DATA_VALUE)
+    fun getQuizById(@ModelAttribute quizReq: QuizReq, @PathVariable quizId: String): Mono<QuizResp> {
+        return Mono.just(quizService.getQuizById(quizId))
+    }
+
+    @Operation(
         summary = "Add answers for quiz",
         description = "Add answers for quiz",
     )

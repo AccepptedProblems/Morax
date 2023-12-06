@@ -16,6 +16,7 @@ data:
       events: events
       quizzes: quizzes
       answers: answers
+      true-answer-history: true-answer-history
       points: points
       mystery-items: mystery-items
       user-history-items: user-history-items
