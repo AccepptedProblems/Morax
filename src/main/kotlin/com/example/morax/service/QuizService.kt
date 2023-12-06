@@ -5,7 +5,7 @@ import reactor.core.publisher.Mono
 
 interface QuizService {
     fun addQuiz(quizReq: QuizReq): Mono<QuizResp>
-    fun updateQuiz(quizReq: QuizReq): Mono<QuizResp>
+    fun updateQuiz(quizReq: QuizReq, quizId: String): QuizResp
     fun getQuizById(quizId: String): QuizResp
     fun getQuizzes(): Mono<List<QuizResp>>
     fun getQuizzesByLocationId(locationId: String): Mono<List<QuizResp>>

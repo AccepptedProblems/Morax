@@ -25,9 +25,9 @@ class QuizController(private val quizService: QuizServiceImpl) {
         summary = "Update quiz",
         description = "Update quiz",
     )
-    @PutMapping("", MediaType.MULTIPART_FORM_DATA_VALUE)
-    fun updateQuiz(@ModelAttribute quizReq: QuizReq): Mono<QuizResp> {
-        return quizService.addQuiz(quizReq)
+    @PutMapping("/{quizId}", MediaType.MULTIPART_FORM_DATA_VALUE)
+    fun updateQuiz(@ModelAttribute quizReq: QuizReq, @PathVariable quizId: String): Mono<QuizResp> {
+        return Mono.just(quizService.updateQuiz(quizReq, quizId))
     }
 
     @Operation(

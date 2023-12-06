@@ -16,9 +16,10 @@ class QuizServiceImpl(
         return Mono.just(QuizResp(quizRepo.addQuiz(newQuiz), listOf()))
     }
 
-    override fun updateQuiz(quizReq: QuizReq): Mono<QuizResp> {
-        val newQuiz = Quiz(quizReq)
-        return Mono.just(QuizResp(quizRepo.addQuiz(newQuiz), listOf()))
+    override fun updateQuiz(quizReq: QuizReq, quizId: String): QuizResp {
+        val quiz = quizRepo.quizById(quizId)
+        val updatedQuiz = quiz.update(quizReq, quizId)
+        return QuizResp(quizRepo.updateQuiz(updatedQuiz), listOf())
     }
 
     override fun getQuizById(quizId: String): QuizResp {

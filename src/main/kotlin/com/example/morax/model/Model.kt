@@ -179,6 +179,18 @@ data class Quiz(
         Binary(BsonBinarySubType.BINARY, quizReq.image.bytes),
         description = quizReq.description
     )
+
+    fun update(quizReq: QuizReq, quizId: String): Quiz {
+        return Quiz(
+            id = quizId,
+            question = quizReq.question,
+            locationId = quizReq.locationId,
+            correctAnswer = quizReq.correctAnswer,
+            point = quizReq.point,
+            Binary(BsonBinarySubType.BINARY, quizReq.image.bytes),
+            description = quizReq.description
+        )
+    }
 }
 
 data class Answer(
