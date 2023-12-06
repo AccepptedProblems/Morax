@@ -75,7 +75,8 @@ class UserServiceImpl(
         TODO("Not yet implemented")
     }
 
-    override fun changePassword(userId: String, changePasswordReq: ChangePasswordReq): UserResp {
+    override fun changePassword(changePasswordReq: ChangePasswordReq): UserResp {
+        val userId = User.currentUser.id
         val user = userRepo.findUserById(userId)
         validator.validChangePassword(changePasswordReq, user.password)
         val newPassword = passwordEncoder.encode(changePasswordReq.newPassword)

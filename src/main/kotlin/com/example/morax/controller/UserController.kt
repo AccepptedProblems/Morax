@@ -28,9 +28,9 @@ class UserController(val userService: UserServiceImpl) {
         return userService.getCurrentUser()
     }
 
-    @PutMapping("/{userId}/changePassword")
-    fun changePassword(@PathVariable userId: String, @RequestBody changePasswordReq: ChangePasswordReq): Mono<UserResp> {
-        return Mono.just(userService.changePassword(userId, changePasswordReq))
+    @PutMapping("/changePassword")
+    fun changePassword(@RequestBody changePasswordReq: ChangePasswordReq): Mono<UserResp> {
+        return Mono.just(userService.changePassword(changePasswordReq))
     }
 
     @PostMapping("/refresh-token")

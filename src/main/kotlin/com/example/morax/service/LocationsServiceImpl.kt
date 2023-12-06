@@ -33,7 +33,9 @@ class LocationsServiceImpl(val locationsRepo: LocationsRepoImpl): LocationsServi
     }
 
     override fun locationByName(name: String?): Mono<List<LocationResp>> {
-        val locationsResp = locationsRepo.getLocations(name).map { location -> LocationResp(location) }
+        val locationsResp = locationsRepo.getLocations(name).map { location ->
+            LocationResp(location)
+        }
         return Mono.just(locationsResp)
     }
 }
