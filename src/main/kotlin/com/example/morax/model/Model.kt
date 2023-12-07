@@ -11,7 +11,7 @@ import java.time.LocalDate
 import java.util.*
 import java.util.stream.Collectors
 
-interface FoocationIdentity{
+interface FoocationIdentity {
     var id: String
     val username: String
     val email: String
@@ -31,7 +31,7 @@ data class User(
     override val role: Role = Role.USER,
     override val avatar: Binary = Binary(byteArrayOf())
 
-): FoocationIdentity {
+) : FoocationIdentity {
     companion object {
         val currentUser: User = User()
 
@@ -44,12 +44,14 @@ data class User(
                 displayName = userReq.displayName,
                 password = userReq.password,
                 role = Role.USER,
-                Binary(BsonBinarySubType.BINARY, userReq.avatar.bytes),
+                if (userReq.avatar != null) Binary(BsonBinarySubType.BINARY, userReq.avatar.bytes) else Binary(
+                    byteArrayOf()
+                ),
             )
         }
     }
 
-    fun updatePassword(newPassword: String): User{
+    fun updatePassword(newPassword: String): User {
         return User(
             id,
             username,
@@ -69,7 +71,9 @@ data class User(
             userReq.displayName,
             userReq.password,
             this.role,
-            Binary(BsonBinarySubType.BINARY, userReq.avatar.bytes),
+            if (userReq.avatar != null) Binary(BsonBinarySubType.BINARY, userReq.avatar.bytes) else Binary(
+                byteArrayOf()
+            ),
         )
     }
 }
@@ -83,7 +87,7 @@ data class Staff(
     override val role: Role = Role.MANAGER,
     val phoneNumber: String,
     override val avatar: Binary
-): FoocationIdentity
+) : FoocationIdentity
 
 data class Artifact(
     val id: String,
@@ -92,8 +96,8 @@ data class Artifact(
     val locationId: String,
     val image: Binary,
     val description: String
-){
-    constructor(artifactReq: ArtifactReq, locationId: String): this(
+) {
+    constructor(artifactReq: ArtifactReq, locationId: String) : this(
         MoraxUtils.newUUID(),
         artifactReq.name,
         artifactReq.time,
@@ -120,7 +124,7 @@ data class Fact(
     val type: OriginalFactType,
     val originalId: String
 ) {
-    constructor(factReq: FactReq): this(
+    constructor(factReq: FactReq) : this(
         MoraxUtils.newUUID(),
         factReq.content,
         factReq.type,
@@ -138,7 +142,7 @@ data class Location(
     val description: String,
     val fact: String?,
 ) {
-    constructor(locationReq: LocationReq): this(
+    constructor(locationReq: LocationReq) : this(
         MoraxUtils.newUUID(),
         locationReq.name,
         locationReq.nameInMap,
@@ -188,7 +192,7 @@ data class Quiz(
     val image: Binary,
     val description: String?
 ) {
-    constructor(quizReq: QuizReq): this(
+    constructor(quizReq: QuizReq) : this(
         id = MoraxUtils.newUUID(),
         question = quizReq.question,
         locationId = quizReq.locationId,
@@ -211,12 +215,24 @@ data class Quiz(
     }
 }
 
+data class TrueQuizHistory(
+    val id: String,
+    val quizId: String,
+    val userId: String,
+) {
+    constructor(quizId: String, userId: String) : this(
+        MoraxUtils.newUUID(),
+        quizId,
+        userId
+    )
+}
+
 data class Answer(
     val id: String,
     val quizId: String,
     val answer: String
 ) {
-    constructor(answer: AnswerReq): this(
+    constructor(answer: AnswerReq) : this(
         id = MoraxUtils.newUUID(),
         answer.quizId,
         answer.answer
@@ -232,7 +248,7 @@ data class MysteryItem(
     val unfoundedImage: Binary,
     val description: String?,
 ) {
-    constructor(mysteryItemReq: MysteryItemReq): this(
+    constructor(mysteryItemReq: MysteryItemReq) : this(
         MoraxUtils.newUUID(),
         mysteryItemReq.name,
         mysteryItemReq.locationId,
@@ -260,7 +276,7 @@ data class Point(
     val userId: String,
     val point: Int
 ) {
-    constructor(userId: String, point: Int): this(
+    constructor(userId: String, point: Int) : this(
         id = MoraxUtils.newUUID(),
         userId, point
     )
@@ -272,7 +288,7 @@ data class UserHistoryMysteryItem(
     val itemId: String,
     val foundAt: LocalDate
 ) {
-    constructor(userId: String, itemId: String): this(
+    constructor(userId: String, itemId: String) : this(
         id = MoraxUtils.newUUID(),
         userId,
         itemId,
@@ -280,7 +296,7 @@ data class UserHistoryMysteryItem(
     )
 }
 
-enum class OriginalFactType{
+enum class OriginalFactType {
     LOCATION, QUIZ, MYSTERY_ITEM
 }
 

@@ -8,7 +8,7 @@ interface QuizService {
     fun updateQuiz(quizReq: QuizReq, quizId: String): QuizResp
     fun getQuizById(quizId: String): QuizResp
     fun getQuizzes(): Mono<List<QuizResp>>
-    fun getQuizzesByLocationId(locationId: String): Mono<List<QuizResp>>
+    fun getQuizzesByLocationId(locationId: String): List<QuizResp>
     fun addAnswer(answers: List<AnswerReq>): Mono<List<AnswerResp>>
     fun updateAnswer(answers: List<AnswerReq>, quizId: String): Mono<List<AnswerResp>>
     fun getQuizAnswer(quizId: String): List<AnswerResp>

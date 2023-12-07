@@ -33,10 +33,9 @@ class QuizServiceImpl(
         return Mono.just(quizzesResp)
     }
 
-    override fun getQuizzesByLocationId(locationId: String): Mono<List<QuizResp>> {
+    override fun getQuizzesByLocationId(locationId: String): List<QuizResp> {
         val quizzes = quizRepo.getQuizzesByLocationId(locationId)
-        val quizzesResp = getQuizzesResp(quizzes)
-        return Mono.just(quizzesResp)
+        return getQuizzesResp(quizzes)
     }
 
     private fun getQuizzesResp(quizzes: List<Quiz>): List<QuizResp> {
@@ -71,6 +70,13 @@ class QuizServiceImpl(
         return if(quiz.correctAnswer == answer.answer) {
             val point = Point(userId, quiz.point)
             pointRepo.addPoint(point)
+
+            val quizHistory = quizRepo.getTrueQuiz(quizId, userId)
+            if(quizHistory == null) {
+                val trueQuiz = TrueQuizHistory(quizId, userId)
+                quizRepo.saveTrueQuiz(trueQuiz)
+            }
+
             AnswerQuizResp(quiz, true)
         } else {
             AnswerQuizResp(quiz, false)

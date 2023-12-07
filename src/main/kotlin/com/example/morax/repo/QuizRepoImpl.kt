@@ -2,6 +2,7 @@ package com.example.morax.repo
 
 import com.example.morax.model.Answer
 import com.example.morax.model.Quiz
+import com.example.morax.model.TrueQuizHistory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.findAll
@@ -16,7 +17,8 @@ import org.springframework.web.server.ResponseStatusException
 class QuizRepoImpl(
     private val mongoTemplate: MongoTemplate,
     @Value("\${data.mongodb.table.quizzes}") val quizCol: String,
-    @Value("\${data.mongodb.table.answers}") val answerCol: String
+    @Value("\${data.mongodb.table.answers}") val answerCol: String,
+    @Value("\${data.mongodb.table.true-quiz-history}") val quizHistoryCol: String,
 ) : QuizRepo {
     override fun addQuiz(quiz: Quiz): Quiz {
         return mongoTemplate.save(quiz, quizCol)
@@ -82,5 +84,30 @@ class QuizRepoImpl(
             HttpStatus.NOT_FOUND,
             "Cannot find any answer with id $answerId"
         )
+    }
+
+    override fun saveTrueQuiz(trueQuiz: TrueQuizHistory): TrueQuizHistory {
+        return mongoTemplate.save(trueQuiz, quizHistoryCol)
+    }
+
+    override fun getTrueQuiz(quizId: String): List<TrueQuizHistory> {
+        val query = Query()
+        query.addCriteria(Criteria.where("quizId").isEqualTo(quizId))
+        return mongoTemplate.find(query, TrueQuizHistory::class.java, quizHistoryCol)
+    }
+
+    override fun getTrueQuiz(quizId: String, userId: String): TrueQuizHistory? {
+        val query = Query()
+        query.addCriteria(Criteria.where("quizId").isEqualTo(quizId))
+        query.addCriteria(Criteria.where("userId").isEqualTo(userId))
+        val trueQuizzes = mongoTemplate.find(query, TrueQuizHistory::class.java, quizHistoryCol)
+        return if (trueQuizzes.size == 0) null
+        else trueQuizzes[0]
+    }
+
+    override fun getUserNumberTrueQuiz(userId: String): Int {
+        val query = Query()
+        query.addCriteria(Criteria.where("userId").isEqualTo(userId))
+        return mongoTemplate.find(query, TrueQuizHistory::class.java, quizHistoryCol).size
     }
 }

@@ -31,7 +31,7 @@ data class UserReq(
     val email: String,
     var password: String,
     var rePassword: String,
-    val avatar: MultipartFile
+    val avatar: MultipartFile?
 )
 
 data class LoginReq(
@@ -64,6 +64,8 @@ data class LocationResp(
     val image: Binary,
     val description: String,
     var artifacts: List<Artifact>,
+    var quizNumber: Int,
+    var trueQuizNumber: Int,
     val fact: String?,
 ) {
     constructor(location: Location): this(
@@ -75,6 +77,22 @@ data class LocationResp(
         location.image,
         location.description,
         listOf(),
+        0,
+        0,
+        location.fact
+    )
+
+    constructor(location: Location, quizNumber: Int, trueQuizNumber: Int): this(
+        location.id,
+        location.name,
+        location.nameInMap,
+        location.latitude,
+        location.longitude,
+        location.image,
+        location.description,
+        listOf(),
+        quizNumber,
+        trueQuizNumber,
         location.fact
     )
 }

@@ -36,7 +36,7 @@ class QuizController(private val quizService: QuizServiceImpl) {
     )
     @GetMapping("")
     fun getQuizzesWithLocationId(@RequestParam locationId: String?): Mono<List<QuizResp>> {
-        return if(locationId != null) quizService.getQuizzesByLocationId(locationId)
+        return if(locationId != null) Mono.just(quizService.getQuizzesByLocationId(locationId))
         else quizService.getQuizzes()
     }
 

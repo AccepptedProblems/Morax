@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 
 @Service
-class LocationsServiceImpl(val locationsRepo: LocationsRepoImpl): LocationsService {
+class LocationsServiceImpl(
+    val locationsRepo: LocationsRepoImpl,
+    private val quizService: QuizServiceImpl): LocationsService {
     override fun createLocation(locationReq: LocationReq): Mono<LocationResp> {
         val newLocation = locationsRepo.addLocation(Location(locationReq))
         val locationResp = LocationResp(newLocation)
@@ -33,9 +35,12 @@ class LocationsServiceImpl(val locationsRepo: LocationsRepoImpl): LocationsServi
     }
 
     override fun locationByName(name: String?): Mono<List<LocationResp>> {
-        val locationsResp = locationsRepo.getLocations(name).map { location ->
-            LocationResp(location)
-        }
+        val locationsResp = locationsRepo.getLocations(name).map { location -> LocationResp(location) }
         return Mono.just(locationsResp)
+    }
+
+    private fun getLocationResp(location: Location): LocationResp {
+        val quizNum = quizService.getQuizzesByLocationId(location.id)
+        return TODO("Provide the return value")
     }
 }
