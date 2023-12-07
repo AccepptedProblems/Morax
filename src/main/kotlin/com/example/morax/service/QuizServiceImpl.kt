@@ -27,10 +27,10 @@ class QuizServiceImpl(
         return QuizResp(quiz, listOf())
     }
 
-    override fun getQuizzes(): Mono<List<QuizResp>> {
+    override fun getQuizzes(): List<QuizResp> {
         val quizzes = quizRepo.getQuizzes()
         val quizzesResp = getQuizzesResp(quizzes)
-        return Mono.just(quizzesResp)
+        return quizzesResp
     }
 
     override fun getQuizzesByLocationId(locationId: String): List<QuizResp> {
@@ -38,11 +38,27 @@ class QuizServiceImpl(
         return getQuizzesResp(quizzes)
     }
 
+    override fun getRandomQuizzesByLocationId(locationId: String?): List<QuizResp> {
+        val quizzes: List<Quiz> = if(locationId != null) quizRepo.getQuizzesByLocationId(locationId)
+        else quizRepo.getQuizzes()
+        return getRandomQuizzesResp(quizzes)
+    }
+
+    private fun getRandomQuizzesResp(quizzes: List<Quiz>): List<QuizResp> {
+        val answers = quizRepo.getAllAnswer().map { AnswerResp(it) }
+        return quizzes.shuffled().map { quiz ->
+            val quizId = quiz.id
+            val ans = answers.filter { it.quizId == quizId }
+            return@map QuizResp(quiz, ans)
+        }
+    }
+
     private fun getQuizzesResp(quizzes: List<Quiz>): List<QuizResp> {
+        val answers = quizRepo.getAllAnswer().map { AnswerResp(it) }
         return quizzes.map { quiz ->
             val quizId = quiz.id
-            val answers = getQuizAnswer(quizId)
-            return@map QuizResp(quiz, answers)
+            val ans = answers.filter { it.quizId == quizId }
+            return@map QuizResp(quiz, ans)
         }
     }
 

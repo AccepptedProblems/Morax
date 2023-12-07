@@ -31,21 +31,30 @@ class QuizController(private val quizService: QuizServiceImpl) {
     }
 
     @Operation(
+            summary = "Get all quizzes",
+            description = "Get all quizzes or quizzes in a location with locationId",
+    )
+    @GetMapping("/all")
+    fun getAllQuizzes(@RequestParam locationId: String?): Mono<List<QuizResp>> {
+        return if(locationId != null) Mono.just(quizService.getQuizzesByLocationId(locationId))
+        else Mono.just(quizService.getQuizzes())
+    }
+
+    @Operation(
         summary = "Get quizzes",
         description = "Get all quizzes or quizzes in a location with locationId",
     )
     @GetMapping("")
-    fun getQuizzesWithLocationId(@RequestParam locationId: String?): Mono<List<QuizResp>> {
-        return if(locationId != null) Mono.just(quizService.getQuizzesByLocationId(locationId))
-        else quizService.getQuizzes()
+    fun getQuizzes(@RequestParam locationId: String?): Mono<List<QuizResp>> {
+        return Mono.just(quizService.getRandomQuizzesByLocationId(locationId).take(10))
     }
 
     @Operation(
         summary = "Get quiz by id",
         description = "Get quiz by id",
     )
-    @GetMapping("/{quizId}", MediaType.MULTIPART_FORM_DATA_VALUE)
-    fun getQuizById(@ModelAttribute quizReq: QuizReq, @PathVariable quizId: String): Mono<QuizResp> {
+    @GetMapping("/{quizId}")
+    fun getQuizById(@PathVariable quizId: String): Mono<QuizResp> {
         return Mono.just(quizService.getQuizById(quizId))
     }
 

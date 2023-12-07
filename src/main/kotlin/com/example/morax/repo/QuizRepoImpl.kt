@@ -73,6 +73,10 @@ class QuizRepoImpl(
         return answers
     }
 
+    override fun getAllAnswer(): List<Answer> {
+        return mongoTemplate.findAll(Answer::class.java, answerCol)
+    }
+
     override fun getQuizAnswer(quizId: String): List<Answer> {
         val query = Query()
         query.addCriteria(Criteria.where("quizId").isEqualTo(quizId))

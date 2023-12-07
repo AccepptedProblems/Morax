@@ -13,6 +13,7 @@ interface QuizRepo {
     fun deleteQuiz(id: String): Quiz
     fun addAnswers(answers: List<Answer>): List<Answer>
     fun updateAnswer(answers: List<Answer>, quizId: String): List<Answer>
+    fun getAllAnswer(): List<Answer>
     fun getQuizAnswer(quizId: String): List<Answer>
     fun answerById(answerId: String): Answer
     fun saveTrueQuiz(trueQuiz: TrueQuizHistory): TrueQuizHistory
