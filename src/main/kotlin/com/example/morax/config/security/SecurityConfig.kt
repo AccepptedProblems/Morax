@@ -46,7 +46,7 @@ class SecurityConfig(
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .csrf { obj -> obj.disable() }
-            .cors { cors -> cors.disable() }
+            .cors{}
             .authorizeHttpRequests { req ->
                 req.requestMatchers(*whiteListURL).permitAll()
                     .dispatcherTypeMatchers(DispatcherType.ASYNC, DispatcherType.FORWARD).permitAll()
