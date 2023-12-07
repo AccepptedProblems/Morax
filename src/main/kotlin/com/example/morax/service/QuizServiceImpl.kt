@@ -98,4 +98,13 @@ class QuizServiceImpl(
             AnswerQuizResp(quiz, false)
         }
     }
+
+    override fun getTrueQuizzesByLocationId(locationId: String): List<TrueQuizHistory> {
+        val userId = User.currentUser.id
+        val quizzesIds = getQuizzesByLocationId(locationId).map { it.id }
+        val trueQuizzesByUser = quizRepo.getTrueQuizByUser(userId).filter { trueQuiz ->  quizzesIds.contains(trueQuiz.quizId)}
+        return trueQuizzesByUser
+    }
+
+
 }

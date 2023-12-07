@@ -14,4 +14,5 @@ interface QuizService {
     fun updateAnswer(answers: List<AnswerReq>, quizId: String): Mono<List<AnswerResp>>
     fun getQuizAnswer(quizId: String): List<AnswerResp>
     fun answerQuiz(quizId: String, answerId: String): AnswerQuizResp
+    fun getTrueQuizzesByLocationId(locationId: String): List<TrueQuizHistory>
 }

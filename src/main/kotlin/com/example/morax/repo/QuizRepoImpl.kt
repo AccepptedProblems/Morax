@@ -109,9 +109,9 @@ class QuizRepoImpl(
         else trueQuizzes[0]
     }
 
-    override fun getUserNumberTrueQuiz(userId: String): Int {
+    override fun getTrueQuizByUser(userId: String): List<TrueQuizHistory> {
         val query = Query()
         query.addCriteria(Criteria.where("userId").isEqualTo(userId))
-        return mongoTemplate.find(query, TrueQuizHistory::class.java, quizHistoryCol).size
+        return mongoTemplate.find(query, TrueQuizHistory::class.java, quizHistoryCol)
     }
 }

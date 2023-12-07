@@ -19,5 +19,5 @@ interface QuizRepo {
     fun saveTrueQuiz(trueQuiz: TrueQuizHistory): TrueQuizHistory
     fun getTrueQuiz(quizId: String): List<TrueQuizHistory>
     fun getTrueQuiz(quizId: String, userId: String): TrueQuizHistory?
-    fun getUserNumberTrueQuiz(userId: String): Int
+    fun getTrueQuizByUser(userId: String): List<TrueQuizHistory>
 }

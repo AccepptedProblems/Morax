@@ -3,14 +3,16 @@ package com.example.morax.service
 import com.example.morax.model.Location
 import com.example.morax.model.LocationReq
 import com.example.morax.model.LocationResp
+import com.example.morax.model.User
 import com.example.morax.repo.LocationsRepoImpl
+import com.example.morax.repo.QuizRepo
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 
 @Service
 class LocationsServiceImpl(
     val locationsRepo: LocationsRepoImpl,
-    private val quizService: QuizServiceImpl): LocationsService {
+    private val quizRepo: QuizRepo): LocationsService {
     override fun createLocation(locationReq: LocationReq): Mono<LocationResp> {
         val newLocation = locationsRepo.addLocation(Location(locationReq))
         val locationResp = LocationResp(newLocation)
@@ -24,7 +26,7 @@ class LocationsServiceImpl(
     }
 
     override fun getLocations(): Mono<List<LocationResp>> {
-        val locationsResp = locationsRepo.getLocations().map { location -> LocationResp(location) }
+        val locationsResp = getLocationRespList(locationsRepo.getLocations())
         return Mono.just(locationsResp)
     }
 
@@ -35,12 +37,22 @@ class LocationsServiceImpl(
     }
 
     override fun locationByName(name: String?): Mono<List<LocationResp>> {
-        val locationsResp = locationsRepo.getLocations(name).map { location -> LocationResp(location) }
+        val locationsResp = getLocationRespList(locationsRepo.getLocations(name))
         return Mono.just(locationsResp)
     }
 
-    private fun getLocationResp(location: Location): LocationResp {
-        val quizNum = quizService.getQuizzesByLocationId(location.id)
-        return TODO("Provide the return value")
+    private fun getLocationRespList(locations: List<Location>): List<LocationResp> {
+        val userId = User.currentUser.id
+        val quizzes = quizRepo.getQuizzes()
+        val trueQuizzes = quizRepo.getTrueQuizByUser(userId)
+        println("number quiz for user is ${trueQuizzes.size}")
+        return locations.map { location ->
+            val quizIdsByLocation = quizzes.filter { it.locationId == location.id }.map { it.id }
+            println("number quiz for ${location.name} is ${quizIdsByLocation.size}")
+            val quizNum = quizIdsByLocation.size
+            val trueQuizNum = trueQuizzes.filter { quizIdsByLocation.contains(it.quizId) }.size
+            println("number true quiz for ${location.name} is $trueQuizNum")
+            LocationResp(location, quizNum, trueQuizNum)
+        }
     }
 }

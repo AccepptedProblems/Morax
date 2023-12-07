@@ -45,8 +45,8 @@ class QuizController(private val quizService: QuizServiceImpl) {
         description = "Get all quizzes or quizzes in a location with locationId",
     )
     @GetMapping("")
-    fun getQuizzes(@RequestParam locationId: String?): Mono<List<QuizResp>> {
-        return Mono.just(quizService.getRandomQuizzesByLocationId(locationId).take(10))
+    fun getQuizzes(@RequestParam locationId: String?): List<QuizResp> {
+        return quizService.getRandomQuizzesByLocationId(locationId)
     }
 
     @Operation(
