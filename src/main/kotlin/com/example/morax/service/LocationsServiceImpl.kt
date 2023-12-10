@@ -45,13 +45,10 @@ class LocationsServiceImpl(
         val userId = User.currentUser.id
         val quizzes = quizRepo.getQuizzes()
         val trueQuizzes = quizRepo.getTrueQuizByUser(userId)
-        println("number quiz for user is ${trueQuizzes.size}")
         return locations.map { location ->
             val quizIdsByLocation = quizzes.filter { it.locationId == location.id }.map { it.id }
-            println("number quiz for ${location.name} is ${quizIdsByLocation.size}")
             val quizNum = quizIdsByLocation.size
             val trueQuizNum = trueQuizzes.filter { quizIdsByLocation.contains(it.quizId) }.size
-            println("number true quiz for ${location.name} is $trueQuizNum")
             LocationResp(location, quizNum, trueQuizNum)
         }
     }
